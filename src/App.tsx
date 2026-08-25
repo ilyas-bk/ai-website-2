@@ -226,6 +226,32 @@ function useScrollY() {
  * in current SaaS/product landing pages. Purely decorative, pointer-events
  * disabled, sits behind content via z-index.
  */
+/**
+ * Forces a guaranteed-smooth blend at a section's top or bottom edge,
+ * regardless of what gradient/blob math is happening underneath.
+ *
+ * Percentage-sized radial gradients (and blurred blobs clipped by
+ * overflow-hidden) only fade smoothly if their math happens to resolve to
+ * the page background before the section's actual edge — which breaks on
+ * tall or variable-height sections. This overlay sidesteps that entirely:
+ * a fixed-height strip of the exact page background, fading to transparent,
+ * so the seam between sections is always invisible.
+ */
+function EdgeFade({ position, height = 110 }: { position: "top" | "bottom"; height?: number }) {
+  return (
+    <div
+      className="pointer-events-none absolute left-0 right-0 z-[1]"
+      style={{
+        [position]: 0,
+        height,
+        background: position === "top"
+          ? `linear-gradient(to bottom, ${C.bg} 0%, transparent 100%)`
+          : `linear-gradient(to top, ${C.bg} 0%, transparent 100%)`,
+      }}
+    />
+  );
+}
+
 function BlobField({ className = "" }: { className?: string }) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
@@ -491,11 +517,14 @@ export default function App() {
           </div>
         </div>
       </section>
+      <EdgeFade position="bottom" height={140} />
       </div>
 
       {/* ═══ WHAT WE DO — the two paths ═══ */}
       <section id="what-we-do" className="relative px-6 py-16 overflow-hidden">
         <BlobField className="opacity-30" />
+        <EdgeFade position="top" />
+        <EdgeFade position="bottom" />
         <Reveal>
         <div className="mx-auto max-w-[1150px] text-center">
           <SectionLabel>What we do</SectionLabel>
@@ -537,6 +566,8 @@ export default function App() {
       {/* ═══ SERVICES — what "AI Content for Your Brand" actually includes ═══ */}
       <section id="services" className="relative px-6 py-16 overflow-hidden" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
         <BlobField className="opacity-60" />
+        <EdgeFade position="top" />
+        <EdgeFade position="bottom" height={140} />
         <Reveal>
         <div className="relative mx-auto max-w-[1150px] text-center">
           <SectionLabel>For brands</SectionLabel>
@@ -621,6 +652,8 @@ export default function App() {
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="relative px-6 py-16 overflow-hidden">
         <BlobField className="opacity-25" />
+        <EdgeFade position="top" />
+        <EdgeFade position="bottom" />
         <Reveal>
         <div className="mx-auto max-w-[1150px] text-center">
           <h2 className="mb-12 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">What people say</h2>
@@ -655,6 +688,8 @@ export default function App() {
       {/* ═══ CONTACT ═══ */}
       <section id="contact" className="relative px-6 py-16 overflow-hidden">
         <BlobField className="opacity-25" />
+        <EdgeFade position="top" />
+        <EdgeFade position="bottom" />
         <Reveal>
         <div className="mx-auto max-w-[700px]">
           <h2 className="mb-2 text-center text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">Get in Touch</h2>
