@@ -18,6 +18,7 @@ const C = {
   bg: "#F1EEEC",
   text: "#3d3b5b",
   purple: "#888FCD",
+  purpleDeep: "#6B72C4",
   lavender: "#E4E0F0",
   lav2: "#EAE7F5",
   lavCard: "#EDEBF7",
@@ -394,11 +395,55 @@ function PipelineVisual() {
 }
 
 
+/**
+ * Persistent bar pinned to the bottom of the viewport. Clicking it (or its
+ * button) smooth-scrolls to the contact form. Dismissible so it never traps
+ * the visitor.
+ */
+function StickyCTA({ onDismiss }: { onDismiss: () => void }) {
+  const scrollToContact = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <div className="fixed bottom-4 left-4 right-4 z-40 mx-auto max-w-[720px]">
+      <div
+        onClick={scrollToContact}
+        className="flex cursor-pointer items-center justify-between gap-4 rounded-full py-2 pl-6 pr-2"
+        style={{ backgroundColor: "rgba(30,25,45,0.94)", backdropFilter: "blur(16px)", boxShadow: "0 20px 50px rgba(0,0,0,0.35)" }}
+      >
+        <div className="min-w-0">
+          <p className="truncate text-[13px] font-bold text-white">{BRAND}</p>
+          <p className="truncate text-[11px]" style={{ color: "rgba(255,255,255,0.65)" }}>AI Content • Online Course • Get in Touch</p>
+        </div>
+        <div className="flex flex-shrink-0 items-center gap-1">
+          <button
+            onClick={scrollToContact}
+            className="whitespace-nowrap rounded-full px-5 py-2.5 text-[12px] font-bold text-white"
+            style={{ background: `linear-gradient(90deg, ${C.purple}, ${C.purpleDeep})` }}
+          >
+            Get in Touch →
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onDismiss(); }}
+            aria-label="Dismiss"
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-[14px]"
+            style={{ color: "rgba(255,255,255,0.5)" }}
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 const BRAND = "Content Collective AI";
 const INSTAGRAM_HANDLE = "@contentcollective.ai";
 const INSTAGRAM_URL = "https://www.instagram.com/contentcollective.ai";
-// TODO: replace with the live URL once the course site (ai-pay-bills) is deployed.
-const COURSE_URL = "#";
+const COURSE_URL = "https://website-ai-flame.vercel.app/";
 
 const WORK_ROW = [imgHero, imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait7, imgPortrait12, imgPortrait13, imgPortrait14, imgPortrait15];
 const WORK_TAGS = ["AI Avatars", "Product Photography", "Social Content", "Consistent Realism"];
@@ -456,11 +501,13 @@ const FAQ_ITEMS = [
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const [stickyDismissed, setStickyDismissed] = useState(false);
   const scrollY = useScrollY();
 
   return (
     <div className="font-['Inter',sans-serif] overflow-x-hidden" style={{ color: C.text, backgroundColor: C.bg }}>
       <Lightbox src={lightbox} onClose={() => setLightbox(null)} />
+      {!stickyDismissed && <StickyCTA onDismiss={() => setStickyDismissed(true)} />}
 
       {/* ═══ NAV + HERO share one continuous animated backdrop ═══ */}
       <div className="relative" style={{ background: `radial-gradient(140% 90% at 0% 0%, ${C.lavStrong} 0%, ${C.lavender} 28%, ${C.lav2} 50%, ${C.bg} 75%)` }}>
@@ -545,7 +592,7 @@ export default function App() {
                   Ready-to-post AI content for your business — product photography, social content, campaigns, and
                   video. Tell us your goal and we handle the rest.
                 </p>
-                <PillButton href="#services" variant="purple" className="relative">See Our Services</PillButton>
+                <PillButton href="#contact" variant="purple" className="relative">See Our Services</PillButton>
               </div>
             </TiltCard>
 
@@ -558,7 +605,7 @@ export default function App() {
                   Our online course teaches you the exact workflow to build AI avatars, generate content, and turn it
                   into real posts and campaigns — step by step.
                 </p>
-                <PillButton href="#course" variant="purple" className="relative">See What's Inside</PillButton>
+                <PillButton href={COURSE_URL} variant="purple" className="relative">See What's Inside</PillButton>
               </div>
             </TiltCard>
           </div>
