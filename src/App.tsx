@@ -108,6 +108,44 @@ function TiltCard({
   );
 }
 
+function FormSelect({
+  defaultLabel, options, className = "",
+}: { defaultLabel: string; options: string[]; className?: string }) {
+  return (
+    <div className="relative">
+      <select
+        defaultValue=""
+        className={`w-full rounded-xl px-4 py-3 pr-10 text-[13px] outline-none ${className}`}
+        style={{
+          border: `1px solid ${C.border}`,
+          backgroundColor: C.bg,
+          color: C.textSub,
+          // Reset native control styling on every browser engine. Without
+          // this, Safari (WebKit) ignores the custom border/background and
+          // falls back to its own pill-shaped system control, which is why
+          // it looked inconsistent with the rest of the form while Chrome
+          // rendered the custom styles fine.
+          appearance: "none",
+          WebkitAppearance: "none",
+          MozAppearance: "none",
+        }}
+      >
+        <option value="" disabled>{defaultLabel}</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>{opt}</option>
+        ))}
+      </select>
+      {/* Custom chevron — appearance:none removes the native arrow on every browser, so we draw our own. */}
+      <svg
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2"
+        width="12" height="8" viewBox="0 0 12 8" fill="none"
+      >
+        <path d="M1 1.5L6 6.5L11 1.5" stroke={C.textSub} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  );
+}
+
 function ZoomImg({ src, alt = "", className = "", onClick }: { src: string; alt?: string; className?: string; onClick: (src: string) => void }) {
   return (
     <div className={`overflow-hidden cursor-zoom-in ${className}`} style={{ backgroundColor: C.lavender }} onClick={() => onClick(src)}>
@@ -500,19 +538,19 @@ export default function App() {
               {formTab === "business" ? (
                 <>
                   <input placeholder="Your WhatsApp" className="rounded-xl px-4 py-3 text-[13px] outline-none" style={{ border: `1px solid ${C.border}`, backgroundColor: C.bg }} />
-                  <select className="rounded-xl px-4 py-3 text-[13px] outline-none" style={{ border: `1px solid ${C.border}`, backgroundColor: C.bg, color: C.textSub }}>
-                    <option>What are you interested in?</option>
-                    <option>AI content</option><option>Automation</option><option>AI video</option><option>Strategy</option><option>Other</option>
-                  </select>
+                  <FormSelect
+                    defaultLabel="What are you interested in?"
+                    options={["AI content", "Automation", "AI video", "Strategy", "Other"]}
+                  />
                 </>
               ) : (
                 <>
                   <input placeholder="Your social account" className="rounded-xl px-4 py-3 text-[13px] outline-none" style={{ border: `1px solid ${C.border}`, backgroundColor: C.bg }} />
                   <input placeholder="Portfolio link (optional)" className="rounded-xl px-4 py-3 text-[13px] outline-none" style={{ border: `1px solid ${C.border}`, backgroundColor: C.bg }} />
-                  <select className="rounded-xl px-4 py-3 text-[13px] outline-none" style={{ border: `1px solid ${C.border}`, backgroundColor: C.bg, color: C.textSub }}>
-                    <option>What do you want to learn?</option>
-                    <option>AI video workflow</option><option>Prompts and consistency</option><option>Editing and publishing</option><option>Automation</option><option>Other</option>
-                  </select>
+                  <FormSelect
+                    defaultLabel="What do you want to learn?"
+                    options={["AI video workflow", "Prompts and consistency", "Editing and publishing", "Automation", "Other"]}
+                  />
                 </>
               )}
               <input placeholder="Subject" className="rounded-xl px-4 py-3 text-[13px] outline-none" style={{ border: `1px solid ${C.border}`, backgroundColor: C.bg }} />
