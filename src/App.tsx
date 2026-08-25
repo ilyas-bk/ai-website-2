@@ -149,7 +149,7 @@ function ExpandCard({
         <p className="text-[13px] font-extrabold uppercase tracking-[0.05em]" style={{ color: C.text }}>{title}</p>
         <span className="inline-block flex-shrink-0 text-lg leading-none transition-transform" style={{ color: C.purple, transform: open ? "rotate(45deg)" : "none" }}>+</span>
       </div>
-      {teaser && <p className="text-[13px] leading-relaxed" style={{ color: C.textSub, marginBottom: open ? 14 : 0 }}>{teaser}</p>}
+      {teaser && <p className="text-[15px] leading-relaxed" style={{ color: C.textSub, marginBottom: open ? 14 : 0 }}>{teaser}</p>}
       {open && <div onClick={(e) => e.stopPropagation()} style={{ marginTop: teaser ? 0 : 14 }}>{children}</div>}
     </div>
   );
@@ -215,20 +215,21 @@ export default function App() {
     <div className="font-['Inter',sans-serif]" style={{ color: C.text, backgroundColor: C.bg }}>
       <Lightbox src={lightbox} onClose={() => setLightbox(null)} />
 
-      {/* ═══ NAV ═══ */}
-      <nav className="sticky top-0 z-50 px-4 py-3" style={{ background: `linear-gradient(90deg, ${C.lavStrong} 0%, ${C.bg} 65%)` }}>
-        <div className="mx-auto flex max-w-[1000px] items-center justify-between gap-3">
-          <div className="flex flex-1 items-center justify-between gap-4 rounded-full px-5 sm:px-6 h-12" style={{ border: `1px solid ${C.purple}66`, background: `linear-gradient(90deg, ${C.lavStrong}77 0%, transparent 70%)` }}>
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] whitespace-nowrap">AI New Era</span>
-            <div className="hidden md:flex items-center gap-6">
+      {/* ═══ NAV + HERO share one continuous top-left gradient backdrop ═══ */}
+      <div style={{ background: `radial-gradient(140% 90% at 0% 0%, ${C.lavStrong} 0%, ${C.lavender} 28%, ${C.lav2} 50%, ${C.bg} 75%)` }}>
+      <nav className="sticky top-0 z-50 px-4 py-4">
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3">
+          <div className="flex flex-1 items-center justify-between gap-4 rounded-full px-6 sm:px-8 h-16" style={{ border: `1px solid ${C.purple}55`, background: `linear-gradient(90deg, ${C.lavStrong}99 0%, ${C.lavCard}40 55%, transparent 100%)` }}>
+            <span className="text-[14px] font-extrabold uppercase tracking-[0.14em] whitespace-nowrap">AI New Era</span>
+            <div className="hidden md:flex items-center gap-7">
               {NAV_LINKS.map((l) => (
-                <a key={l} href={`#${l.toLowerCase().replace(/\s+/g, "-")}`} className="text-[11px] font-semibold uppercase tracking-[0.08em] no-underline opacity-75 transition-opacity hover:opacity-100 whitespace-nowrap" style={{ color: C.text }}>{l}</a>
+                <a key={l} href={`#${l.toLowerCase().replace(/\s+/g, "-")}`} className="text-[13px] font-semibold uppercase tracking-[0.08em] no-underline opacity-75 transition-opacity hover:opacity-100 whitespace-nowrap" style={{ color: C.text }}>{l}</a>
               ))}
             </div>
           </div>
-          <PillButton href="#get-started" variant="purple" className="hidden md:inline-block !px-6 !py-3 flex-shrink-0">Get Started</PillButton>
+          <PillButton href="#get-started" variant="purple" className="hidden md:inline-block !px-8 !py-4 !text-[13px] flex-shrink-0">Get Started</PillButton>
           <button className="md:hidden p-1 flex-shrink-0" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
-            <svg width="22" height="22" stroke={C.text} strokeWidth="1.8" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" strokeLinecap="round" /></svg>
+            <svg width="26" height="26" stroke={C.text} strokeWidth="1.8" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" strokeLinecap="round" /></svg>
           </button>
         </div>
         {menuOpen && (
@@ -242,34 +243,35 @@ export default function App() {
       </nav>
 
       {/* ═══ HERO ═══ */}
-      <section className="pb-16" style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)` }}>
-        <div className="mx-auto max-w-[1140px] px-6 pt-10">
+      <section className="pb-16">
+        <div className="mx-auto max-w-[1320px] px-6 pt-10">
           <TiltCard className="relative overflow-hidden rounded-3xl" extraTransform={`perspective(1200px) rotateX(${Math.min(scrollY * 0.02, 8)}deg) scale(${1 - Math.min(scrollY * 0.00012, 0.05)})`}>
-            <div className="relative h-[420px] md:h-[560px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
+            <div className="relative h-[460px] md:h-[680px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
               <img src={imgHero} alt="AI New Era" className="absolute left-0 w-full object-cover block" style={{ height: "150%", top: `-${Math.min(scrollY * 0.4, 220)}px`, transform: `scale(${1 + Math.min(scrollY * 0.0006, 0.18)})`, transition: "transform 0.05s linear" }} />
               <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)" }} />
-              <div className="absolute top-4 right-4 rounded-full px-4 py-1.5 backdrop-blur-md" style={{ backgroundColor: "rgba(61,59,91,0.55)" }}>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white whitespace-nowrap">🚀 Welcome to the New AI Era</span>
+              <div className="absolute top-5 right-5 rounded-full px-5 py-2 backdrop-blur-md" style={{ backgroundColor: "rgba(61,59,91,0.55)" }}>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white whitespace-nowrap">🚀 Welcome to the New AI Era</span>
               </div>
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[600px] px-6 pb-8 md:px-11 md:pb-11">
-                <h1 className="mb-3 text-[30px] sm:text-[36px] md:text-[44px] font-extrabold leading-[1.1] tracking-[-0.01em] text-white">AI New Era</h1>
-                <p className="mb-6 text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[680px] px-7 pb-10 md:px-14 md:pb-14">
+                <h1 className="mb-4 text-[36px] sm:text-[46px] md:text-[58px] font-extrabold leading-[1.08] tracking-[-0.01em] text-white">AI New Era</h1>
+                <p className="mb-7 text-[16px] md:text-[17px] leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
                   A community for people who want to build with AI and turn ideas into outcomes. Brands come here to
                   grow with smarter content and automation. Creators come here to learn the workflow and improve fast.
                 </p>
-                <PillButton href="#what-we-offer" variant="light" className="!text-[12px] pointer-events-auto">Choose Your Path</PillButton>
+                <PillButton href="#what-we-offer" variant="light" className="!text-[13px] pointer-events-auto">Choose Your Path</PillButton>
               </div>
             </div>
           </TiltCard>
         </div>
       </section>
+      </div>
 
       {/* ═══ WHAT WE OFFER ═══ */}
       <section id="what-we-offer" className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[1000px] text-center">
+        <div className="mx-auto max-w-[1200px] text-center">
           <SectionLabel>What we offer</SectionLabel>
-          <h2 className="mb-11 text-[26px] md:text-[30px] font-extrabold leading-[1.25] tracking-[-0.01em]">
+          <h2 className="mb-11 text-[30px] md:text-[36px] font-extrabold leading-[1.25] tracking-[-0.01em]">
             Two paths. Same standard: <span style={{ color: C.purple }}>high-quality output</span> with{" "}
             <span style={{ color: C.purple }}>repeatable AI workflows</span>.
           </h2>
@@ -277,8 +279,8 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
             <Card tint className="!p-8">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl" style={{ backgroundColor: C.lavStrong }}>🎨</div>
-              <h3 className="mb-2 text-[19px] font-extrabold">For Brands & Businesses</h3>
-              <p className="mb-5 text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+              <h3 className="mb-2 text-[21px] font-extrabold">For Brands & Businesses</h3>
+              <p className="mb-5 text-[15px] leading-relaxed" style={{ color: C.textSub }}>
                 Ready-to-post visual content created with AI. Images, videos, and complete marketing campaigns that
                 stop the scroll and drive results.
               </p>
@@ -292,8 +294,8 @@ export default function App() {
 
             <Card tint className="!p-8">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl" style={{ backgroundColor: C.lavStrong }}>🚀</div>
-              <h3 className="mb-2 text-[19px] font-extrabold">For AI Creators</h3>
-              <p className="mb-5 text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+              <h3 className="mb-2 text-[21px] font-extrabold">For AI Creators</h3>
+              <p className="mb-5 text-[15px] leading-relaxed" style={{ color: C.textSub }}>
                 Master the workflows, learn the secrets, build faster. Get the exact prompts, tools, and strategies we
                 use in our agency every day.
               </p>
@@ -310,11 +312,11 @@ export default function App() {
       </section>
 
       {/* ═══ AI EXAMPLES + VIRAL WORKFLOWS ═══ */}
-      <section id="workflows" className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 35%, ${C.bg} 100%)` }}>
+      <section id="workflows" className="px-6 py-16" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[1000px] text-center">
-          <h2 className="mb-3.5 text-[24px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">AI Examples + Viral Workflows</h2>
-          <p className="mx-auto mb-11 max-w-[600px] text-[14px] leading-loose" style={{ color: C.textSub }}>
+        <div className="mx-auto max-w-[1150px] text-center">
+          <h2 className="mb-3.5 text-[28px] md:text-[34px] font-extrabold leading-[1.3] tracking-[-0.01em]">AI Examples + Viral Workflows</h2>
+          <p className="mx-auto mb-11 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
             We don't teach theory. We ship proven step-by-step processes you can replicate in 30–60 minutes and we
             show real examples that brands can use immediately.
           </p>
@@ -345,10 +347,10 @@ export default function App() {
       {/* ═══ FOR BUSINESSES ═══ */}
       <section className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[900px] text-center">
+        <div className="mx-auto max-w-[1020px] text-center">
           <SectionLabel>💼 For Businesses</SectionLabel>
           <h2 className="mb-4 text-[26px] md:text-[28px] font-extrabold tracking-[-0.01em]">We create content that sells</h2>
-          <p className="mx-auto mb-10 max-w-[560px] text-[14px] leading-loose" style={{ color: C.textSub }}>
+          <p className="mx-auto mb-10 max-w-[560px] text-[15px] leading-loose" style={{ color: C.textSub }}>
             If you don't know tools or models, no problem. You tell us the goal, we deliver scroll-stopping creatives.
           </p>
 
@@ -374,12 +376,12 @@ export default function App() {
       </section>
 
       {/* ═══ FOR CREATORS ═══ */}
-      <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)` }}>
+      <section className="px-6 py-16" style={{ background: `radial-gradient(80% 60% at 50% 35%, ${C.lav2} 0%, ${C.bg} 80%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[1000px] text-center">
+        <div className="mx-auto max-w-[1150px] text-center">
           <SectionLabel>🧠 For Creators</SectionLabel>
           <h2 className="mb-4 text-[26px] md:text-[28px] font-extrabold tracking-[-0.01em]">Learn the exact workflow</h2>
-          <p className="mx-auto mb-14 max-w-[600px] text-[14px] leading-loose" style={{ color: C.textSub }}>
+          <p className="mx-auto mb-14 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
             For people who already "get AI": we teach the pipeline, prompts, templates and posting system. Built
             around trending tools like <strong>Nano Banana Pro</strong> and <strong>Kling AI</strong>.
           </p>
@@ -414,9 +416,9 @@ export default function App() {
       {/* ═══ OUR AI WORK ═══ */}
       <section id="our-work" className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[1000px] text-center">
+        <div className="mx-auto max-w-[1150px] text-center">
           <h2 className="mb-4 text-[26px] md:text-[28px] font-extrabold tracking-[-0.01em]">Our AI Work</h2>
-          <p className="mx-auto mb-10 max-w-[600px] text-[14px] leading-loose" style={{ color: C.textSub }}>
+          <p className="mx-auto mb-10 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
             Every image crafted with AI. This is what we create for clients and what we teach creators to build. Same
             tools, same workflow, different results.
           </p>
@@ -426,7 +428,7 @@ export default function App() {
         <ExpandingGallery images={showcaseRow} onImageClick={setLightbox} scrollY={scrollY} />
         </Reveal>
         <Reveal>
-        <div className="mx-auto mt-8 grid max-w-[1000px] grid-cols-2 md:grid-cols-4 gap-4 px-6">
+        <div className="mx-auto mt-8 grid max-w-[1150px] grid-cols-2 md:grid-cols-4 gap-4 px-6">
           {WORK_CATEGORIES.map((c, i) => (
             <div key={i} className="text-center">
               <p className="text-[13px] font-extrabold uppercase tracking-[0.03em]">{c.title}</p>
@@ -438,15 +440,15 @@ export default function App() {
       </section>
 
       {/* ═══ WHAT HAPPENS NEXT ═══ */}
-      <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 40%, ${C.bg} 100%)` }}>
+      <section className="px-6 py-16" style={{ background: `radial-gradient(95% 70% at 30% 40%, ${C.lavender} 0%, ${C.lav2} 42%, ${C.bg} 82%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[900px] text-center">
-          <h2 className="mb-4 text-[24px] md:text-[26px] font-extrabold tracking-[-0.01em]">✨ What Happens Next</h2>
-          <p className="mx-auto mb-2.5 max-w-[600px] text-[14px] leading-relaxed opacity-85">
+        <div className="mx-auto max-w-[1020px] text-center">
+          <h2 className="mb-4 text-[32px] md:text-[38px] font-extrabold tracking-[-0.01em]">✨ What Happens Next</h2>
+          <p className="mx-auto mb-2.5 max-w-[600px] text-[15px] leading-relaxed opacity-85">
             Pick your path and send a message. If you're looking for AI work for your business, choose New Client. If
             you want to learn as a creator, choose AI Creator and tell us what you want to build.
           </p>
-          <p className="mx-auto mb-10 text-[14px] leading-relaxed opacity-85">We read every message and reply with a clear next step.</p>
+          <p className="mx-auto mb-10 text-[15px] leading-relaxed opacity-85">We read every message and reply with a clear next step.</p>
 
           <p className="mb-6 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: C.textSub }}>Choose Your Path</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
@@ -455,7 +457,7 @@ export default function App() {
                 <div className="mb-3 flex h-12 w-12 mx-auto items-center justify-center rounded-full text-xl" style={{ backgroundColor: C.lavStrong }}>💼</div>
                 <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: C.textSub }}>For Businesses</p>
                 <p className="mb-2 text-[17px] font-extrabold">New Client</p>
-                <p className="text-[13px]" style={{ color: C.textSub }}>Get ready-to-use AI content for your brand. Tell us your goal and we'll show you what's possible.</p>
+                <p className="text-[14px]" style={{ color: C.textSub }}>Get ready-to-use AI content for your brand. Tell us your goal and we'll show you what's possible.</p>
               </Card>
             </div>
             <div onClick={() => setFormTab("creator")} className="cursor-pointer">
@@ -463,7 +465,7 @@ export default function App() {
                 <div className="mb-3 flex h-12 w-12 mx-auto items-center justify-center rounded-full text-xl" style={{ backgroundColor: C.lavStrong }}>🧠</div>
                 <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: C.textSub }}>For Creators</p>
                 <p className="mb-2 text-[17px] font-extrabold">AI Creator</p>
-                <p className="text-[13px]" style={{ color: C.textSub }}>Learn our workflows and techniques. Apply and tell us what you want to create next.</p>
+                <p className="text-[14px]" style={{ color: C.textSub }}>Learn our workflows and techniques. Apply and tell us what you want to create next.</p>
               </Card>
             </div>
           </div>
@@ -474,9 +476,9 @@ export default function App() {
       {/* ═══ GET STARTED (form) ═══ */}
       <section id="get-started" className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[700px]">
-          <h2 className="mb-2 text-center text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">Get Started</h2>
-          <p className="mb-8 text-center text-[13px]" style={{ color: C.textSub }}>Fill out the form below and we'll be in touch.</p>
+        <div className="mx-auto max-w-[820px]">
+          <h2 className="mb-2 text-center text-[32px] md:text-[38px] font-extrabold tracking-[-0.01em]">Get Started</h2>
+          <p className="mb-8 text-center text-[14px]" style={{ color: C.textSub }}>Fill out the form below and we'll be in touch.</p>
 
           <div className="mx-auto mb-8 flex w-fit rounded-full p-1" style={{ backgroundColor: C.lav2, border: `1px solid ${C.border}` }}>
             {(["business", "creator"] as const).map((tab) => (
@@ -525,13 +527,13 @@ export default function App() {
       {/* ═══ DISCORD + TRUST ═══ */}
       <section className="px-6 pb-16">
         <Reveal>
-        <div className="mx-auto max-w-[760px] rounded-3xl px-8 py-10 text-center md:px-12" style={{ backgroundColor: C.lavStrong, border: `1px solid ${C.purple}55` }}>
+        <div className="mx-auto max-w-[840px] rounded-3xl px-8 py-10 text-center md:px-12" style={{ backgroundColor: C.lavStrong, border: `1px solid ${C.purple}55` }}>
           <p className="mb-6 text-[15px] font-semibold leading-relaxed">Join our Creator Community on Discord and get free educational material.</p>
           <PillButton href="https://discord.gg/Mry7ebX3" variant="dark" className="mb-4">Enter Discord</PillButton>
           <p className="text-[11px] font-medium uppercase tracking-[0.1em]" style={{ color: C.text, opacity: 0.7 }}>Free access • Templates • Prompts • Resources • Support</p>
         </div>
 
-        <div className="mx-auto mt-8 flex max-w-[760px] flex-wrap justify-center gap-3">
+        <div className="mx-auto mt-8 flex max-w-[840px] flex-wrap justify-center gap-3">
           {["🔒 Privacy First", "⚡ Fast Reply", "🤝 Human Support"].map((t) => (
             <span key={t} className="rounded-full px-5 py-2 text-[11px] font-semibold" style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, color: C.textSub }}>{t}</span>
           ))}
@@ -541,7 +543,7 @@ export default function App() {
 
       {/* ═══ FOOTER ═══ */}
       <footer className="px-6 py-6" style={{ backgroundColor: C.lavender }}>
-        <div className="mx-auto flex max-w-[960px] flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mx-auto flex max-w-[1100px] flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-[11px] font-bold uppercase tracking-[0.18em]">Built by AI New Era</span>
           <div className="flex flex-wrap justify-center gap-6">
             <a href="#" className="text-[11px] font-medium uppercase tracking-[0.1em] no-underline" style={{ color: C.textSub }}>Privacy Policy</a>

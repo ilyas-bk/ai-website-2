@@ -3,7 +3,28 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /*
+   * Lock the rem base at 16px, explicitly.
+   *
+   * Tailwind's default utility classes (px-6, py-16, gap-1.5, mt-11, etc.)
+   * are all rem-based, not px-based. Without this rule, 1rem resolves to
+   * whatever the BROWSER's default font-size preference is set to — which
+   * is reliably 16px on Safari/macOS, but is very commonly overridden to
+   * "Large"/"Very Large" (e.g. 20px) on Windows machines, either via the
+   * browser's own font settings (chrome://settings/fonts) or via Windows'
+   * "Make text bigger" accessibility setting cascading into it.
+   *
+   * When that happens, every rem-based padding/margin/gap on the page
+   * inflates proportionally while hardcoded max-w-[...px] containers stay
+   * fixed — producing narrower-looking sections with more side padding
+   * that vary by machine/OS rather than by actual screen size.
+   */
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   font-family: 'Inter', sans-serif;
