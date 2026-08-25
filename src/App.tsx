@@ -401,6 +401,9 @@ const INSTAGRAM_URL = "https://www.instagram.com/contentcollective.ai";
 const COURSE_URL = "#";
 
 const WORK_ROW = [imgHero, imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait7, imgPortrait12, imgPortrait13, imgPortrait14, imgPortrait15];
+const WORK_TAGS = ["AI Avatars", "Product Photography", "Social Content", "Consistent Realism"];
+
+
 
 const BRAND_DELIVERABLES = [
   { icon: "📸", title: "AI Product Photography", desc: "Studio-quality product shots — no camera, no studio, no shoot day." },
@@ -635,17 +638,47 @@ export default function App() {
         </Reveal>
       </section>
 
-      {/* ═══ OUR WORK — looping proof strip ═══ */}
-      <section id="our-work" className="relative" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
+      {/* ═══ OUR WORK — grid gallery, description below ═══ */}
+      <section id="our-work" className="relative overflow-hidden" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
+        <BlobField className="opacity-30" />
+        <EdgeFade position="top" />
+        <EdgeFade position="bottom" />
         <Reveal>
-        <div className="mx-auto max-w-[1150px] px-6 pb-7 pt-14 text-center">
-          <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
-          <p className="mb-9 text-[13px] leading-relaxed" style={{ color: C.textSub }}>
-            Every image here was created with AI — the same system we use for clients and teach in the course.
-          </p>
+        <div className="relative mx-auto max-w-[1150px] px-6 py-16">
+          <div className="mb-9 text-center">
+            <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
+            <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+              Every image here was created with AI — the same system we use for clients and teach in the course.
+            </p>
+          </div>
+
+          {/* Grid gallery */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {WORK_ROW.map((src, i) => (
+              <ZoomImg
+                key={src + i}
+                src={src}
+                onClick={setLightbox}
+                className="h-[180px] sm:h-[220px] rounded-2xl transition-transform duration-300 hover:scale-[1.03]"
+              />
+            ))}
+          </div>
+
+          {/* Description panel below the grid */}
+          <div className="mt-8 rounded-3xl p-8 md:p-10 text-left" style={{ backgroundColor: "rgba(255,255,255,0.6)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
+            <h3 className="mb-3 text-[20px] md:text-[22px] font-extrabold">Content that feels native to social media</h3>
+            <p className="mb-6 max-w-[720px] text-[14px] leading-relaxed" style={{ color: C.textSub }}>
+              Natural skin, believable lighting, varied scenes, and consistent characters across every shot. The
+              focus isn't one lucky image — it's a repeatable system for getting this level of realism every time,
+              for every brand or avatar we build.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {WORK_TAGS.map((tag) => (
+                <span key={tag} className="rounded-full px-4 py-1.5 text-[11px] font-semibold" style={{ backgroundColor: C.lav2, color: C.text }}>{tag}</span>
+              ))}
+            </div>
+          </div>
         </div>
-        <ExpandingGallery images={WORK_ROW} onImageClick={setLightbox} scrollY={scrollY} />
-        <div className="mb-16" />
         </Reveal>
       </section>
 
