@@ -221,6 +221,105 @@ function useScrollY() {
   return y;
 }
 
+/**
+ * Ambient floating gradient blobs — the "aura" background treatment common
+ * in current SaaS/product landing pages. Purely decorative, pointer-events
+ * disabled, sits behind content via z-index.
+ */
+function BlobField({ className = "" }: { className?: string }) {
+  return (
+    <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: 560, height: 560, top: "-12%", left: "-8%",
+          background: `radial-gradient(circle, ${C.purple}55 0%, transparent 70%)`,
+          filter: "blur(60px)",
+          animation: "blob-float-a 22s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: 480, height: 480, top: "10%", right: "-10%",
+          background: `radial-gradient(circle, ${C.lavStrong}88 0%, transparent 70%)`,
+          filter: "blur(70px)",
+          animation: "blob-float-b 26s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: 420, height: 420, bottom: "-15%", left: "30%",
+          background: `radial-gradient(circle, ${C.lav2} 0%, transparent 70%)`,
+          filter: "blur(60px)",
+          animation: "blob-float-c 30s ease-in-out infinite",
+        }}
+      />
+      <div className="grain-overlay absolute inset-0" style={{ opacity: 0.4 }} />
+    </div>
+  );
+}
+
+/** Radial glow that follows the cursor within its container — subtle, modern interactivity. */
+function Spotlight({ className = "" }: { className?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ x: 50, y: 50, active: false });
+
+  useEffect(() => {
+    const el = containerRef.current;
+    const parent = el?.parentElement;
+    if (!parent) return;
+
+    const handleMove = (e: MouseEvent) => {
+      const rect = parent.getBoundingClientRect();
+      setPos({ x: ((e.clientX - rect.left) / rect.width) * 100, y: ((e.clientY - rect.top) / rect.height) * 100, active: true });
+    };
+    const handleLeave = () => setPos((p) => ({ ...p, active: false }));
+
+    parent.addEventListener("mousemove", handleMove);
+    parent.addEventListener("mouseleave", handleLeave);
+    return () => {
+      parent.removeEventListener("mousemove", handleMove);
+      parent.removeEventListener("mouseleave", handleLeave);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${className}`}
+      style={{
+        opacity: pos.active ? 1 : 0,
+        background: `radial-gradient(480px circle at ${pos.x}% ${pos.y}%, ${C.purple}22 0%, transparent 65%)`,
+      }}
+    />
+  );
+}
+
+/** Small qualitative trust badge — deliberately non-numeric so we never present unverifiable stats as fact. */
+function TrustBadge({ icon, label }: { icon: string; label: string }) {
+  return (
+    <div className="flex items-center gap-2.5 rounded-full px-5 py-2.5" style={{ backgroundColor: "rgba(255,255,255,0.6)", border: `1px solid ${C.border}`, backdropFilter: "blur(6px)" }}>
+      <span className="text-[16px]">{icon}</span>
+      <span className="text-[12px] font-semibold uppercase tracking-[0.06em]" style={{ color: C.text }}>{label}</span>
+    </div>
+  );
+}
+
+/** One numbered step in a process timeline. */
+function ProcessStep({ n, title, desc }: { n: number; title: string; desc: string }) {
+  return (
+    <div className="flex-1 text-left">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full text-[16px] font-extrabold" style={{ backgroundColor: C.lavStrong, color: C.purple, border: `1.5px solid ${C.purple}55` }}>
+        {n}
+      </div>
+      <h4 className="mb-1.5 text-[16px] font-extrabold">{title}</h4>
+      <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{desc}</p>
+    </div>
+  );
+}
+
 // ── Data ──────────────────────────────────────────────────────────────────
 const BRAND = "Content Collective AI";
 const INSTAGRAM_HANDLE = "@contentcollective.ai";
@@ -229,6 +328,39 @@ const INSTAGRAM_URL = "https://www.instagram.com/contentcollective.ai";
 const COURSE_URL = "#";
 
 const WORK_ROW = [imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait7, imgPortrait12, imgPortrait13, imgPortrait14, imgPortrait15];
+
+const BRAND_DELIVERABLES = [
+  { icon: "📸", title: "AI Product Photography", desc: "Studio-quality product shots — no camera, no studio, no shoot day." },
+  { icon: "📱", title: "Social Media Content Packs", desc: "Ready-to-post images and reels sized and styled for every platform." },
+  { icon: "🎬", title: "Video Ads & Reels", desc: "Scroll-stopping short-form video built from AI-generated footage and avatars." },
+  { icon: "🚀", title: "Full Brand Campaigns", desc: "A complete, consistent visual system across every channel you post to." },
+];
+
+const PROCESS_STEPS = [
+  { title: "Brief", desc: "You tell us your brand, your goals, and the content you need." },
+  { title: "Concept", desc: "We design the avatar, visual direction, and Character DNA." },
+  { title: "Production", desc: "We generate and refine every image, video, and campaign asset." },
+  { title: "Delivery", desc: "You get ready-to-post content, with revisions included." },
+];
+
+const COURSE_PREVIEW = [
+  { title: "Avatar Foundation", desc: "Build a character that stays consistent across every image." },
+  { title: "Image Generation", desc: "Turn your avatar into a full creative system." },
+  { title: "Video & Content", desc: "Animate everything into publishable posts and campaigns." },
+];
+
+const TESTIMONIALS = [
+  { name: "Sofia M.", role: "UGC Creator", text: "I had zero experience with AI and now I have a full avatar with a consistent look across dozens of images." },
+  { name: "Lumé Cosmetics", role: "Client", text: "We replaced our monthly photoshoots with AI campaign visuals. The quality is genuinely impressive." },
+  { name: "Marco R.", role: "Freelancer", text: "The workflow they taught me is the reason I can offer AI content as a service now." },
+];
+
+const FAQ_ITEMS = [
+  { q: "How fast can you deliver content?", a: "Most content packs are delivered within 5–10 business days, depending on scope. We'll give you a clear timeline in your quote." },
+  { q: "Do you work with any industry?", a: "Yes — we've built AI content systems for beauty, fashion, hospitality, and personal brands. If you sell a product or a service, we can help." },
+  { q: "Is the course beginner-friendly?", a: "Completely. It's built for people with zero AI experience as well as creators who want to add AI to an existing workflow." },
+  { q: "Can I hire you AND take the course?", a: "Absolutely — some clients start by hiring us, then take the course later to bring production in-house." },
+];
 
 // ═════════════════════════════════════════════════════════════════════════
 // APP
@@ -239,14 +371,15 @@ export default function App() {
   const scrollY = useScrollY();
 
   return (
-    <div className="font-['Inter',sans-serif]" style={{ color: C.text, backgroundColor: C.bg }}>
+    <div className="font-['Inter',sans-serif] overflow-x-hidden" style={{ color: C.text, backgroundColor: C.bg }}>
       <Lightbox src={lightbox} onClose={() => setLightbox(null)} />
 
-      {/* ═══ NAV + HERO share one continuous top-left gradient backdrop ═══ */}
-      <div style={{ background: `radial-gradient(140% 90% at 0% 0%, ${C.lavStrong} 0%, ${C.lavender} 28%, ${C.lav2} 50%, ${C.bg} 75%)` }}>
-      <nav className="sticky top-0 z-50 px-4 py-4">
+      {/* ═══ NAV + HERO share one continuous animated backdrop ═══ */}
+      <div className="relative" style={{ background: `radial-gradient(140% 90% at 0% 0%, ${C.lavStrong} 0%, ${C.lavender} 28%, ${C.lav2} 50%, ${C.bg} 75%)` }}>
+      <BlobField />
+      <nav className="relative z-10 sticky top-0 px-4 py-4">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3">
-          <div className="flex flex-1 items-center justify-between gap-4 rounded-full px-6 sm:px-8 h-16" style={{ border: `1px solid ${C.purple}55`, background: `linear-gradient(90deg, ${C.lavStrong}99 0%, ${C.lavCard}40 55%, transparent 100%)` }}>
+          <div className="flex flex-1 items-center justify-between gap-4 rounded-full px-6 sm:px-8 h-16" style={{ border: `1px solid ${C.purple}55`, background: "rgba(255,255,255,0.45)", backdropFilter: "blur(14px)" }}>
             <span className="text-[14px] font-extrabold uppercase tracking-[0.14em] whitespace-nowrap">{BRAND}</span>
             <div className="hidden md:flex items-center gap-7">
               {NAV_LINKS.map((l) => (
@@ -270,27 +403,37 @@ export default function App() {
       </nav>
 
       {/* ═══ HERO ═══ */}
-      <section className="pb-16">
-        <div className="mx-auto max-w-[1320px] px-6 pt-10">
+      <section className="relative z-10 pb-16">
+        <div className="mx-auto max-w-[1320px] px-6 pt-6">
           <TiltCard className="relative overflow-hidden rounded-3xl" extraTransform={`perspective(1200px) rotateX(${Math.min(scrollY * 0.02, 8)}deg) scale(${1 - Math.min(scrollY * 0.00012, 0.05)})`}>
-            <div className="relative h-[420px] md:h-[600px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
+            <div className="relative h-[440px] md:h-[600px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
               <img src={imgHero} alt={BRAND} className="absolute left-0 w-full object-cover block" style={{ height: "150%", top: `-${Math.min(scrollY * 0.4, 220)}px`, transform: `scale(${1 + Math.min(scrollY * 0.0006, 0.18)})`, transition: "transform 0.05s linear" }} />
-              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)" }} />
+              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.7) 0%, rgba(0,0,0,0) 55%)" }} />
+              <Spotlight />
               <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[640px] px-7 pb-10 md:px-14 md:pb-14">
                 <h1 className="mb-4 text-[32px] sm:text-[42px] md:text-[52px] font-extrabold leading-[1.1] tracking-[-0.01em] text-white">{BRAND}</h1>
                 <p className="mb-7 text-[16px] leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
                   We create AI content for brands, and we teach creators how to build it themselves.
                 </p>
-                <PillButton href="#what-we-do" variant="light" className="!text-[13px] pointer-events-auto">See What We Offer</PillButton>
+                <div className="pointer-events-auto flex flex-wrap gap-3">
+                  <PillButton href="#what-we-do" variant="light" className="!text-[13px]">See What We Offer</PillButton>
+                  <PillButton href="#contact" variant="outline" className="!text-[13px] !border-white !text-white">Get a Quote</PillButton>
+                </div>
               </div>
             </div>
           </TiltCard>
+
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <TrustBadge icon="🤖" label="AI-Native Production" />
+            <TrustBadge icon="⚡" label="Fast Turnaround" />
+            <TrustBadge icon="🎓" label="Built by Practitioners" />
+          </div>
         </div>
       </section>
       </div>
 
       {/* ═══ WHAT WE DO — the two paths ═══ */}
-      <section id="what-we-do" className="px-6 py-16">
+      <section id="what-we-do" className="relative px-6 py-16">
         <Reveal>
         <div className="mx-auto max-w-[1150px] text-center">
           <SectionLabel>What we do</SectionLabel>
@@ -299,29 +442,29 @@ export default function App() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-            {/* PATH 1 — AI content for brands → contact form */}
             <TiltCard className="rounded-[24px] overflow-hidden" >
-              <div className="p-8 md:p-10" style={{ backgroundColor: C.lavCard, border: `1px solid ${C.border}` }}>
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl" style={{ backgroundColor: C.lavStrong }}>🎨</div>
-                <h3 className="mb-3 text-[22px] font-extrabold">AI Content for Your Brand</h3>
-                <p className="mb-7 text-[15px] leading-relaxed" style={{ color: C.textSub }}>
+              <div className="relative p-8 md:p-10 overflow-hidden" style={{ backgroundColor: C.lavCard, border: `1px solid ${C.border}` }}>
+                <Spotlight />
+                <div className="relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl" style={{ backgroundColor: C.lavStrong }}>🎨</div>
+                <h3 className="relative mb-3 text-[22px] font-extrabold">AI Content for Your Brand</h3>
+                <p className="relative mb-7 text-[15px] leading-relaxed" style={{ color: C.textSub }}>
                   Ready-to-post AI content for your business — product photography, social content, campaigns, and
                   video. Tell us your goal and we handle the rest.
                 </p>
-                <PillButton href="#contact" variant="purple">Get a Quote</PillButton>
+                <PillButton href="#services" variant="purple" className="relative">See Our Services</PillButton>
               </div>
             </TiltCard>
 
-            {/* PATH 2 — the online course → links out to the course site */}
             <TiltCard className="rounded-[24px] overflow-hidden" >
-              <div className="p-8 md:p-10" style={{ backgroundColor: C.lavCard, border: `1px solid ${C.border}` }}>
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl" style={{ backgroundColor: C.lavStrong }}>🚀</div>
-                <h3 className="mb-3 text-[22px] font-extrabold">Learn to Create with AI</h3>
-                <p className="mb-7 text-[15px] leading-relaxed" style={{ color: C.textSub }}>
+              <div className="relative p-8 md:p-10 overflow-hidden" style={{ backgroundColor: C.lavCard, border: `1px solid ${C.border}` }}>
+                <Spotlight />
+                <div className="relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl" style={{ backgroundColor: C.lavStrong }}>🚀</div>
+                <h3 className="relative mb-3 text-[22px] font-extrabold">Learn to Create with AI</h3>
+                <p className="relative mb-7 text-[15px] leading-relaxed" style={{ color: C.textSub }}>
                   Our online course teaches you the exact workflow to build AI avatars, generate content, and turn it
                   into real posts and campaigns — step by step.
                 </p>
-                <PillButton href={COURSE_URL} variant="purple">View the Course</PillButton>
+                <PillButton href="#course" variant="purple" className="relative">See What's Inside</PillButton>
               </div>
             </TiltCard>
           </div>
@@ -329,8 +472,69 @@ export default function App() {
         </Reveal>
       </section>
 
-      {/* ═══ OUR WORK — compact proof strip ═══ */}
-      <section id="our-work" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
+      {/* ═══ SERVICES — what "AI Content for Your Brand" actually includes ═══ */}
+      <section id="services" className="relative px-6 py-16 overflow-hidden" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
+        <BlobField className="opacity-60" />
+        <Reveal>
+        <div className="relative mx-auto max-w-[1150px] text-center">
+          <SectionLabel>For brands</SectionLabel>
+          <h2 className="mb-4 text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">What's included</h2>
+          <p className="mx-auto mb-12 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
+            Every project starts with your goal, not a template. Here's what we build.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left">
+            {BRAND_DELIVERABLES.map((d) => (
+              <TiltCard key={d.title} className="rounded-2xl overflow-hidden">
+                <div className="p-7" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl" style={{ backgroundColor: C.lav2 }}>{d.icon}</div>
+                  <h4 className="mb-1.5 text-[16px] font-extrabold">{d.title}</h4>
+                  <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{d.desc}</p>
+                </div>
+              </TiltCard>
+            ))}
+          </div>
+
+          {/* Process timeline */}
+          <div className="mt-16 rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
+            <p className="mb-8 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: C.textSub }}>How we work</p>
+            <div className="flex flex-col sm:flex-row gap-8 sm:gap-6">
+              {PROCESS_STEPS.map((s, i) => <ProcessStep key={s.title} n={i + 1} title={s.title} desc={s.desc} />)}
+            </div>
+          </div>
+
+          <PillButton href="#contact" variant="purple" className="mt-10">Get a Quote</PillButton>
+        </div>
+        </Reveal>
+      </section>
+
+      {/* ═══ COURSE PREVIEW ═══ */}
+      <section id="course" className="relative px-6 py-16">
+        <Reveal>
+        <div className="mx-auto max-w-[1150px] text-center">
+          <SectionLabel>For creators</SectionLabel>
+          <h2 className="mb-4 text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">What's inside the course</h2>
+          <p className="mx-auto mb-12 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
+            A complete, three-part system — from your first AI avatar to a full content pipeline.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+            {COURSE_PREVIEW.map((m, i) => (
+              <div key={m.title} className="rounded-2xl p-7" style={{ backgroundColor: C.lavCard, border: `1px solid ${C.border}` }}>
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full text-[14px] font-extrabold" style={{ backgroundColor: C.lavStrong, color: C.purple }}>{i + 1}</div>
+                <h4 className="mb-1.5 text-[16px] font-extrabold">{m.title}</h4>
+                <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{m.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <PillButton href={COURSE_URL} variant="purple" className="mt-10">View the Full Course</PillButton>
+        </div>
+        </Reveal>
+      </section>
+
+      {/* ═══ OUR WORK — looping proof strip ═══ */}
+      <section id="our-work" className="relative" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
         <Reveal>
         <div className="mx-auto max-w-[1150px] px-6 pb-7 pt-14 text-center">
           <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
@@ -343,7 +547,40 @@ export default function App() {
         </Reveal>
       </section>
 
-      {/* ═══ CONTACT — single simple inquiry form for AI content work ═══ */}
+      {/* ═══ TESTIMONIALS ═══ */}
+      <section className="px-6 py-16">
+        <Reveal>
+        <div className="mx-auto max-w-[1150px] text-center">
+          <h2 className="mb-12 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">What people say</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left">
+            {TESTIMONIALS.map((t) => (
+              <Card key={t.name}>
+                <p className="mb-4 text-[14px] leading-relaxed opacity-85">"{t.text}"</p>
+                <p className="text-[12px] font-semibold" style={{ color: C.purple }}>{t.name} <span style={{ color: C.textSub, fontWeight: 500 }}>— {t.role}</span></p>
+              </Card>
+            ))}
+          </div>
+        </div>
+        </Reveal>
+      </section>
+
+      {/* ═══ FAQ ═══ */}
+      <section className="px-6 pb-16" style={{ background: `radial-gradient(90% 70% at 30% 40%, ${C.lavender} 0%, ${C.lav2} 42%, ${C.bg} 82%)` }}>
+        <Reveal>
+        <div className="mx-auto max-w-[800px]">
+          <h2 className="mb-9 text-center text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Frequently Asked</h2>
+          <div className="flex flex-col gap-2.5">
+            {FAQ_ITEMS.map((item) => (
+              <ExpandCard key={item.q} title={item.q} teaser="" align="left">
+                <p className="text-[14px] leading-relaxed opacity-80">{item.a}</p>
+              </ExpandCard>
+            ))}
+          </div>
+        </div>
+        </Reveal>
+      </section>
+
+      {/* ═══ CONTACT ═══ */}
       <section id="contact" className="px-6 py-16">
         <Reveal>
         <div className="mx-auto max-w-[700px]">
