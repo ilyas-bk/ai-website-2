@@ -307,12 +307,15 @@ function TrustBadge({ icon, label }: { icon: string; label: string }) {
   );
 }
 
-/** One numbered step in a process timeline. */
-function ProcessStep({ n, title, desc }: { n: number; title: string; desc: string }) {
+/** One step in a process timeline, with an icon badge instead of a plain number. */
+function ProcessStep({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (
     <div className="flex-1 text-left">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full text-[16px] font-extrabold" style={{ backgroundColor: C.lavStrong, color: C.purple, border: `1.5px solid ${C.purple}55` }}>
-        {n}
+      <div
+        className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl text-[22px]"
+        style={{ backgroundColor: C.white, border: `1.5px solid ${C.purple}55`, boxShadow: `0 6px 16px ${C.purple}22` }}
+      >
+        {icon}
       </div>
       <h4 className="mb-1.5 text-[16px] font-extrabold">{title}</h4>
       <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{desc}</p>
@@ -320,14 +323,58 @@ function ProcessStep({ n, title, desc }: { n: number; title: string; desc: strin
   );
 }
 
-// ── Data ──────────────────────────────────────────────────────────────────
+/** Descriptive hero visual: shows the actual pipeline (brand → AI → content) instead of a stock photo. */
+function PipelineVisual() {
+  const outputs = [
+    { icon: "📸", label: "Product Shots" },
+    { icon: "📱", label: "Social Posts" },
+    { icon: "🎬", label: "Video & Reels" },
+  ];
+  return (
+    <div className="relative rounded-3xl p-8 md:p-10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(14px)" }}>
+      <BlobField className="opacity-70" />
+      <div className="relative flex flex-col items-center gap-6">
+        {/* Input */}
+        <div className="rounded-2xl px-6 py-4 text-center" style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, minWidth: 180 }}>
+          <p className="text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: C.textSub }}>Your Brand</p>
+          <p className="text-[13px] font-semibold">Goal, product, story</p>
+        </div>
+
+        <div className="text-[22px]" style={{ color: C.purple, animation: "blob-float-b 6s ease-in-out infinite" }}>↓</div>
+
+        {/* AI engine */}
+        <div
+          className="flex h-20 w-20 items-center justify-center rounded-full text-[30px]"
+          style={{ backgroundColor: C.purple, boxShadow: `0 0 0 10px ${C.lavStrong}55`, animation: "blob-float-a 8s ease-in-out infinite" }}
+        >
+          🤖
+        </div>
+        <p className="-mt-4 text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: C.purple }}>AI Content Engine</p>
+
+        <div className="text-[22px]" style={{ color: C.purple, animation: "blob-float-c 6s ease-in-out infinite" }}>↓</div>
+
+        {/* Outputs */}
+        <div className="grid grid-cols-3 gap-3 w-full">
+          {outputs.map((o) => (
+            <div key={o.label} className="rounded-2xl px-3 py-4 text-center" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+              <p className="mb-1 text-[20px]">{o.icon}</p>
+              <p className="text-[10px] font-semibold leading-tight">{o.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 const BRAND = "Content Collective AI";
 const INSTAGRAM_HANDLE = "@contentcollective.ai";
 const INSTAGRAM_URL = "https://www.instagram.com/contentcollective.ai";
 // TODO: replace with the live URL once the course site (ai-pay-bills) is deployed.
 const COURSE_URL = "#";
 
-const WORK_ROW = [imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait7, imgPortrait12, imgPortrait13, imgPortrait14, imgPortrait15];
+const WORK_ROW = [imgHero, imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait7, imgPortrait12, imgPortrait13, imgPortrait14, imgPortrait15];
 
 const BRAND_DELIVERABLES = [
   { icon: "📸", title: "AI Product Photography", desc: "Studio-quality product shots — no camera, no studio, no shoot day." },
@@ -337,16 +384,28 @@ const BRAND_DELIVERABLES = [
 ];
 
 const PROCESS_STEPS = [
-  { title: "Brief", desc: "You tell us your brand, your goals, and the content you need." },
-  { title: "Concept", desc: "We design the avatar, visual direction, and Character DNA." },
-  { title: "Production", desc: "We generate and refine every image, video, and campaign asset." },
-  { title: "Delivery", desc: "You get ready-to-post content, with revisions included." },
+  { icon: "📝", title: "Brief", desc: "You tell us your brand, your goals, and the content you need." },
+  { icon: "🎨", title: "Concept", desc: "We design the avatar, visual direction, and Character DNA." },
+  { icon: "⚙️", title: "Production", desc: "We generate and refine every image, video, and campaign asset." },
+  { icon: "✅", title: "Delivery", desc: "You get ready-to-post content, with revisions included." },
 ];
 
 const COURSE_PREVIEW = [
-  { title: "Avatar Foundation", desc: "Build a character that stays consistent across every image." },
-  { title: "Image Generation", desc: "Turn your avatar into a full creative system." },
-  { title: "Video & Content", desc: "Animate everything into publishable posts and campaigns." },
+  {
+    icon: "🧬", title: "Avatar Foundation",
+    desc: "Build a character that stays consistent across every image.",
+    bullets: ["Define your avatar goal", "Create your Character DNA", "Generate realistic base images"],
+  },
+  {
+    icon: "🖼️", title: "Image Generation",
+    desc: "Turn your avatar into a full creative system.",
+    bullets: ["Generate scenes & environments", "Product and campaign shots", "Consistent, natural realism"],
+  },
+  {
+    icon: "🎥", title: "Video & Content",
+    desc: "Animate everything into publishable posts and campaigns.",
+    bullets: ["Animate images into video", "Add voice and movement", "Assemble into social posts"],
+  },
 ];
 
 const TESTIMONIALS = [
@@ -404,36 +463,39 @@ export default function App() {
 
       {/* ═══ HERO ═══ */}
       <section className="relative z-10 pb-16">
-        <div className="mx-auto max-w-[1320px] px-6 pt-6">
-          <TiltCard className="relative overflow-hidden rounded-3xl" extraTransform={`perspective(1200px) rotateX(${Math.min(scrollY * 0.02, 8)}deg) scale(${1 - Math.min(scrollY * 0.00012, 0.05)})`}>
-            <div className="relative h-[440px] md:h-[600px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
-              <img src={imgHero} alt={BRAND} className="absolute left-0 w-full object-cover block" style={{ height: "150%", top: `-${Math.min(scrollY * 0.4, 220)}px`, transform: `scale(${1 + Math.min(scrollY * 0.0006, 0.18)})`, transition: "transform 0.05s linear" }} />
-              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.7) 0%, rgba(0,0,0,0) 55%)" }} />
-              <Spotlight />
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[640px] px-7 pb-10 md:px-14 md:pb-14">
-                <h1 className="mb-4 text-[32px] sm:text-[42px] md:text-[52px] font-extrabold leading-[1.1] tracking-[-0.01em] text-white">{BRAND}</h1>
-                <p className="mb-7 text-[16px] leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
-                  We create AI content for brands, and we teach creators how to build it themselves.
-                </p>
-                <div className="pointer-events-auto flex flex-wrap gap-3">
-                  <PillButton href="#what-we-do" variant="light" className="!text-[13px]">See What We Offer</PillButton>
-                  <PillButton href="#contact" variant="outline" className="!text-[13px] !border-white !text-white">Get a Quote</PillButton>
-                </div>
+        <div className="mx-auto max-w-[1320px] px-6 pt-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            {/* Left: descriptive copy */}
+            <div>
+              <SectionLabel>{BRAND}</SectionLabel>
+              <h1 className="mb-5 text-[36px] sm:text-[46px] md:text-[54px] font-extrabold leading-[1.08] tracking-[-0.01em]">
+                AI content for brands.<br />AI skills for creators.
+              </h1>
+              <p className="mb-8 max-w-[480px] text-[16px] leading-relaxed" style={{ color: C.textSub }}>
+                We build ready-to-post AI content for businesses, and we teach creators the exact system to make it
+                themselves — same workflow, two ways to use it.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <PillButton href="#what-we-do" variant="purple" className="!text-[13px]">See What We Offer</PillButton>
+                <PillButton href="#contact" variant="outline" className="!text-[13px]">Get a Quote</PillButton>
+              </div>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <TrustBadge icon="🤖" label="AI-Native Production" />
+                <TrustBadge icon="⚡" label="Fast Turnaround" />
+                <TrustBadge icon="🎓" label="Built by Practitioners" />
               </div>
             </div>
-          </TiltCard>
 
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <TrustBadge icon="🤖" label="AI-Native Production" />
-            <TrustBadge icon="⚡" label="Fast Turnaround" />
-            <TrustBadge icon="🎓" label="Built by Practitioners" />
+            {/* Right: descriptive pipeline visual — no photography, just what we do */}
+            <PipelineVisual />
           </div>
         </div>
       </section>
       </div>
 
       {/* ═══ WHAT WE DO — the two paths ═══ */}
-      <section id="what-we-do" className="relative px-6 py-16">
+      <section id="what-we-do" className="relative px-6 py-16 overflow-hidden">
+        <BlobField className="opacity-30" />
         <Reveal>
         <div className="mx-auto max-w-[1150px] text-center">
           <SectionLabel>What we do</SectionLabel>
@@ -485,21 +547,27 @@ export default function App() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left">
             {BRAND_DELIVERABLES.map((d) => (
-              <TiltCard key={d.title} className="rounded-2xl overflow-hidden">
-                <div className="p-7" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl" style={{ backgroundColor: C.lav2 }}>{d.icon}</div>
-                  <h4 className="mb-1.5 text-[16px] font-extrabold">{d.title}</h4>
-                  <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{d.desc}</p>
-                </div>
-              </TiltCard>
+              <div key={d.title} className="rounded-2xl p-7" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl" style={{ backgroundColor: C.lav2 }}>{d.icon}</div>
+                <h4 className="mb-1.5 text-[16px] font-extrabold">{d.title}</h4>
+                <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{d.desc}</p>
+              </div>
             ))}
           </div>
 
           {/* Process timeline */}
-          <div className="mt-16 rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
-            <p className="mb-8 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: C.textSub }}>How we work</p>
-            <div className="flex flex-col sm:flex-row gap-8 sm:gap-6">
-              {PROCESS_STEPS.map((s, i) => <ProcessStep key={s.title} n={i + 1} title={s.title} desc={s.desc} />)}
+          <div className="relative mt-16 overflow-hidden rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
+            <BlobField className="opacity-40" />
+            <p className="relative mb-8 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: C.textSub }}>How we work</p>
+            <div className="relative flex flex-col sm:flex-row gap-8 sm:gap-4 sm:items-start">
+              {PROCESS_STEPS.map((s, i) => (
+                <div key={s.title} className="flex flex-1 items-start gap-4">
+                  <ProcessStep icon={s.icon} title={s.title} desc={s.desc} />
+                  {i < PROCESS_STEPS.length - 1 && (
+                    <span className="hidden sm:block mt-6 flex-shrink-0 text-[20px]" style={{ color: C.purple }}>→</span>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -519,12 +587,15 @@ export default function App() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
-            {COURSE_PREVIEW.map((m, i) => (
-              <div key={m.title} className="rounded-2xl p-7" style={{ backgroundColor: C.lavCard, border: `1px solid ${C.border}` }}>
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full text-[14px] font-extrabold" style={{ backgroundColor: C.lavStrong, color: C.purple }}>{i + 1}</div>
-                <h4 className="mb-1.5 text-[16px] font-extrabold">{m.title}</h4>
-                <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{m.desc}</p>
-              </div>
+            {COURSE_PREVIEW.map((m) => (
+              <ExpandCard key={m.title} title={`${m.icon}  ${m.title}`} teaser={m.desc} align="left" tint>
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: C.textSub }}>Inside this module:</p>
+                <div className="flex flex-col gap-1.5">
+                  {m.bullets.map((b) => (
+                    <p key={b} className="text-[13px] leading-relaxed">• {b}</p>
+                  ))}
+                </div>
+              </ExpandCard>
             ))}
           </div>
 
@@ -548,7 +619,8 @@ export default function App() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="px-6 py-16">
+      <section className="relative px-6 py-16 overflow-hidden">
+        <BlobField className="opacity-25" />
         <Reveal>
         <div className="mx-auto max-w-[1150px] text-center">
           <h2 className="mb-12 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">What people say</h2>
@@ -581,7 +653,8 @@ export default function App() {
       </section>
 
       {/* ═══ CONTACT ═══ */}
-      <section id="contact" className="px-6 py-16">
+      <section id="contact" className="relative px-6 py-16 overflow-hidden">
+        <BlobField className="opacity-25" />
         <Reveal>
         <div className="mx-auto max-w-[700px]">
           <h2 className="mb-2 text-center text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">Get in Touch</h2>
