@@ -89,7 +89,7 @@ function TiltCard({
     const rect = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: py * -14, y: px * 14, active: true });
+    setTilt({ x: py * -3, y: px * 3, active: true });
   }
   return (
     <div
@@ -98,10 +98,10 @@ function TiltCard({
       onClick={onClick}
       className={className}
       style={{
-        transform: `${extraTransform} perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.active ? 1.04 : 1})`,
-        transition: tilt.active ? "transform 0.08s ease-out, box-shadow 0.08s ease-out" : "transform 0.45s ease, box-shadow 0.45s ease",
+        transform: `${extraTransform} perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.active ? 1.008 : 1})`,
+        transition: tilt.active ? "transform 0.15s ease-out, box-shadow 0.15s ease-out" : "transform 0.5s ease, box-shadow 0.5s ease",
         transformStyle: "preserve-3d",
-        boxShadow: tilt.active ? `${-tilt.y * 1.4}px ${-tilt.x * 1.4 + 14}px 28px rgba(61,59,91,0.28)` : "0 0px 0px rgba(0,0,0,0)",
+        boxShadow: tilt.active ? `${-tilt.y * 0.5}px ${-tilt.x * 0.5 + 6}px 16px rgba(61,59,91,0.14)` : "0 0px 0px rgba(0,0,0,0)",
       }}
     >
       {children}
