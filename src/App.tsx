@@ -63,6 +63,30 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>{children}</p>;
 }
 
+/** Emphasised section label: a lavender pill so the audience ("For brands") reads at a glance. */
+function SectionTag({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-bold uppercase tracking-[0.14em]" style={{ backgroundColor: C.lavStrong, color: C.text }}>
+      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: C.purpleDeep }} />
+      {children}
+    </p>
+  );
+}
+
+/** Endless row of photos drifting right to left. Pauses on hover; static for reduced motion. */
+function PhotoMarquee({ images }: { images: string[] }) {
+  const loop = [...images, ...images];
+  return (
+    <div className="marquee relative overflow-hidden py-4" style={{ maskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)" }}>
+      <div className="marquee-track flex w-max">
+        {loop.map((src, i) => (
+          <img key={i} src={src} alt="" aria-hidden={i >= images.length} loading="lazy" className="mr-4 h-[220px] md:h-[300px] w-auto flex-shrink-0 rounded-2xl object-cover" style={{ aspectRatio: "4 / 5" }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Card({ children, className = "", accent = false, tint = false }: { children: React.ReactNode; className?: string; accent?: boolean; tint?: boolean }) {
   return (
     <div className={`rounded-[20px] p-6 md:p-7 ${className}`} style={{ backgroundColor: tint ? C.lavCard : C.white, border: `1px solid ${accent ? C.purple : C.border}` }}>
@@ -358,8 +382,11 @@ function PipelineVisual() {
     { icon: "🎬", label: "Video & Reels" },
   ];
   return (
-    <div className="relative rounded-3xl p-8 md:p-10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(14px)" }}>
-      <BlobField className="opacity-70" />
+    <div className="relative rounded-3xl p-8 md:p-10 overflow-hidden" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+      {/* Product photo behind the pipeline, blurred and washed out to a milky glass */}
+      <img src={imgPortrait3} alt="" aria-hidden className="pointer-events-none absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "60% 45%", filter: "blur(14px) saturate(1.15)", transform: "scale(1.15)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(247,245,252,0.7) 0%, rgba(247,245,252,0.5) 55%, rgba(247,245,252,0.68) 100%)" }} />
+      <div className="grain-overlay pointer-events-none absolute inset-0" style={{ opacity: 0.25 }} />
       <div className="relative flex flex-col items-center gap-6">
         {/* Input */}
         <div className="rounded-2xl px-6 py-4 text-center" style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, minWidth: 180 }}>
@@ -376,7 +403,7 @@ function PipelineVisual() {
         >
           🤖
         </div>
-        <p className="-mt-4 text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: C.purple }}>AI Content Engine</p>
+        <p className="-mt-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: C.purpleDeep, backgroundColor: "rgba(255,255,255,0.75)" }}>AI Content Engine</p>
 
         <div className="text-[22px]" style={{ color: C.purple, animation: "blob-float-c 6s ease-in-out infinite" }}>↓</div>
 
@@ -620,7 +647,7 @@ export default function App() {
         <EdgeFade position="bottom" height={140} />
         <Reveal>
         <div className="relative mx-auto max-w-[1150px] text-center">
-          <SectionLabel>For brands</SectionLabel>
+          <SectionTag>For brands</SectionTag>
           <h2 className="mb-4 text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">What's included</h2>
           <p className="mx-auto mb-12 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
             Every project starts with your goal, not a template. Here's what we build.
@@ -657,11 +684,16 @@ export default function App() {
         </Reveal>
       </section>
 
+      {/* ═══ PHOTO MARQUEE ═══ */}
+      <section aria-label="Examples of our AI content" className="relative py-8">
+        <PhotoMarquee images={WORK_ROW} />
+      </section>
+
       {/* ═══ COURSE PREVIEW ═══ */}
       <section id="course" className="relative px-6 py-16">
         <Reveal>
         <div className="mx-auto max-w-[1150px] text-center">
-          <SectionLabel>For creators</SectionLabel>
+          <SectionTag>For creators</SectionTag>
           <h2 className="mb-4 text-[28px] md:text-[32px] font-extrabold tracking-[-0.01em]">What's inside the course</h2>
           <p className="mx-auto mb-12 max-w-[600px] text-[15px] leading-loose" style={{ color: C.textSub }}>
             A complete, three-part system — from your first AI avatar to a full content pipeline.
