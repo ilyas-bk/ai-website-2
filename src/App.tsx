@@ -358,8 +358,11 @@ function PipelineVisual() {
     { icon: "🎬", label: "Video & Reels" },
   ];
   return (
-    <div className="relative rounded-3xl p-8 md:p-10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(14px)" }}>
-      <BlobField className="opacity-70" />
+    <div className="relative rounded-3xl p-8 md:p-10 overflow-hidden" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+      {/* Product photo behind the pipeline, blurred and washed out to a milky glass */}
+      <img src={imgPortrait3} alt="" aria-hidden className="pointer-events-none absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "60% 45%", filter: "blur(14px) saturate(1.15)", transform: "scale(1.15)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(247,245,252,0.7) 0%, rgba(247,245,252,0.5) 55%, rgba(247,245,252,0.68) 100%)" }} />
+      <div className="grain-overlay pointer-events-none absolute inset-0" style={{ opacity: 0.25 }} />
       <div className="relative flex flex-col items-center gap-6">
         {/* Input */}
         <div className="rounded-2xl px-6 py-4 text-center" style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, minWidth: 180 }}>
@@ -376,7 +379,7 @@ function PipelineVisual() {
         >
           🤖
         </div>
-        <p className="-mt-4 text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: C.purple }}>AI Content Engine</p>
+        <p className="-mt-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: C.purpleDeep, backgroundColor: "rgba(255,255,255,0.75)" }}>AI Content Engine</p>
 
         <div className="text-[22px]" style={{ color: C.purple, animation: "blob-float-c 6s ease-in-out infinite" }}>↓</div>
 
