@@ -663,6 +663,22 @@ export default function App() {
             ))}
           </div>
 
+          {/* Realism note: compact strip, copy left and tags right */}
+          <div className="mt-5 flex flex-col gap-5 rounded-2xl px-7 py-6 text-left md:flex-row md:items-center md:justify-between md:gap-10" style={{ backgroundColor: "rgba(255,255,255,0.6)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
+            <div className="md:max-w-[560px]">
+              <h3 className="mb-1.5 text-[18px] font-extrabold">Content that feels native to social media</h3>
+              <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+                Natural skin, believable lighting, varied scenes, and consistent characters across every shot — a
+                repeatable system, not one lucky image.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 md:max-w-[340px] md:justify-end">
+              {WORK_TAGS.map((tag) => (
+                <span key={tag} className="rounded-full px-4 py-1.5 text-[11px] font-semibold" style={{ backgroundColor: C.lav2, color: C.text }}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
           {/* Process timeline */}
           <div className="relative mt-16 overflow-hidden rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
             <BlobField className="opacity-40" />
@@ -728,24 +744,6 @@ export default function App() {
 
           {/* Sliding photo row, full width */}
           <PhotoMarquee images={WORK_ROW} onImageClick={setLightbox} />
-
-          <div className="mx-auto max-w-[1150px] px-6">
-
-          {/* Description panel below the grid */}
-          <div className="mt-8 rounded-3xl p-8 md:p-10 text-left" style={{ backgroundColor: "rgba(255,255,255,0.6)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
-            <h3 className="mb-3 text-[20px] md:text-[22px] font-extrabold">Content that feels native to social media</h3>
-            <p className="mb-6 max-w-[720px] text-[14px] leading-relaxed" style={{ color: C.textSub }}>
-              Natural skin, believable lighting, varied scenes, and consistent characters across every shot. The
-              focus isn't one lucky image — it's a repeatable system for getting this level of realism every time,
-              for every brand or avatar we build.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {WORK_TAGS.map((tag) => (
-                <span key={tag} className="rounded-full px-4 py-1.5 text-[11px] font-semibold" style={{ backgroundColor: C.lav2, color: C.text }}>{tag}</span>
-              ))}
-            </div>
-          </div>
-          </div>
         </div>
         </Reveal>
       </section>
