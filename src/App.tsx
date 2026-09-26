@@ -74,13 +74,13 @@ function SectionTag({ children }: { children: React.ReactNode }) {
 }
 
 /** Endless row of photos drifting right to left. Pauses on hover; static for reduced motion. */
-function PhotoMarquee({ images }: { images: string[] }) {
+function PhotoMarquee({ images, onImageClick }: { images: string[]; onImageClick?: (src: string) => void }) {
   const loop = [...images, ...images];
   return (
     <div className="marquee relative overflow-hidden py-4" style={{ maskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)" }}>
       <div className="marquee-track flex w-max">
         {loop.map((src, i) => (
-          <img key={i} src={src} alt="" aria-hidden={i >= images.length} loading="lazy" className="mr-4 h-[220px] md:h-[300px] w-auto flex-shrink-0 rounded-2xl object-cover" style={{ aspectRatio: "4 / 5" }} />
+          <img key={i} src={src} alt="" aria-hidden={i >= images.length} loading="lazy" onClick={onImageClick ? () => onImageClick(src) : undefined} className={`mr-4 h-[220px] md:h-[300px] w-auto flex-shrink-0 rounded-2xl object-cover ${onImageClick ? "cursor-zoom-in" : ""}`} style={{ aspectRatio: "4 / 5" }} />
         ))}
       </div>
     </div>
@@ -663,6 +663,22 @@ export default function App() {
             ))}
           </div>
 
+          {/* Realism note: compact strip, copy left and tags right */}
+          <div className="mt-5 flex flex-col gap-5 rounded-2xl px-7 py-6 text-left md:flex-row md:items-center md:justify-between md:gap-10" style={{ backgroundColor: "rgba(255,255,255,0.6)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
+            <div className="md:max-w-[560px]">
+              <h3 className="mb-1.5 text-[18px] font-extrabold">Content that feels native to social media</h3>
+              <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+                Natural skin, believable lighting, varied scenes, and consistent characters across every shot — a
+                repeatable system, not one lucky image.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 md:max-w-[340px] md:justify-end">
+              {WORK_TAGS.map((tag) => (
+                <span key={tag} className="rounded-full px-4 py-1.5 text-[11px] font-semibold" style={{ backgroundColor: C.lav2, color: C.text }}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
           {/* Process timeline */}
           <div className="relative mt-16 overflow-hidden rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
             <BlobField className="opacity-40" />
@@ -682,11 +698,6 @@ export default function App() {
           <PillButton href="#contact" variant="purple" className="mt-10">Get a Quote</PillButton>
         </div>
         </Reveal>
-      </section>
-
-      {/* ═══ PHOTO MARQUEE ═══ */}
-      <section aria-label="Examples of our AI content" className="relative py-8">
-        <PhotoMarquee images={WORK_ROW} />
       </section>
 
       {/* ═══ COURSE PREVIEW ═══ */}
@@ -723,40 +734,16 @@ export default function App() {
         <EdgeFade position="top" />
         <EdgeFade position="bottom" />
         <Reveal>
-        <div className="relative mx-auto max-w-[1150px] px-6 py-16">
-          <div className="mb-9 text-center">
+        <div className="relative py-16">
+          <div className="mx-auto mb-9 max-w-[1150px] px-6 text-center">
             <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
             <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
               Every image here was created with AI — the same system we use for clients and teach in the course.
             </p>
           </div>
 
-          {/* Grid gallery */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {WORK_ROW.map((src, i) => (
-              <ZoomImg
-                key={src + i}
-                src={src}
-                onClick={setLightbox}
-                className="h-[180px] sm:h-[220px] rounded-2xl transition-transform duration-300 hover:scale-[1.03]"
-              />
-            ))}
-          </div>
-
-          {/* Description panel below the grid */}
-          <div className="mt-8 rounded-3xl p-8 md:p-10 text-left" style={{ backgroundColor: "rgba(255,255,255,0.6)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
-            <h3 className="mb-3 text-[20px] md:text-[22px] font-extrabold">Content that feels native to social media</h3>
-            <p className="mb-6 max-w-[720px] text-[14px] leading-relaxed" style={{ color: C.textSub }}>
-              Natural skin, believable lighting, varied scenes, and consistent characters across every shot. The
-              focus isn't one lucky image — it's a repeatable system for getting this level of realism every time,
-              for every brand or avatar we build.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {WORK_TAGS.map((tag) => (
-                <span key={tag} className="rounded-full px-4 py-1.5 text-[11px] font-semibold" style={{ backgroundColor: C.lav2, color: C.text }}>{tag}</span>
-              ))}
-            </div>
-          </div>
+          {/* Sliding photo row, full width */}
+          <PhotoMarquee images={WORK_ROW} onImageClick={setLightbox} />
         </div>
         </Reveal>
       </section>
