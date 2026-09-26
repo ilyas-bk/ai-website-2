@@ -87,6 +87,53 @@ function PhotoMarquee({ images, onImageClick }: { images: string[]; onImageClick
   );
 }
 
+function InstagramGlyph({ size = 20, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" aria-hidden>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill={color} stroke="none" />
+    </svg>
+  );
+}
+
+/**
+ * Instagram-style profile preview: a header with the handle and a grid of
+ * post tiles. Every tile links to the profile. The posts are our own images,
+ * not a live feed, so nothing breaks if Instagram changes its API.
+ */
+function InstagramFeed({ posts }: { posts: string[] }) {
+  const linkProps = { href: INSTAGRAM_URL, target: "_blank", rel: "noopener noreferrer" };
+  return (
+    <div className="mx-auto max-w-[760px] rounded-3xl p-5 md:p-7" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <a {...linkProps} className="flex min-w-0 items-center gap-3 no-underline" style={{ color: C.text }}>
+          <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full p-[2px]" style={{ background: `linear-gradient(135deg, ${C.purple}, ${C.lavStrong})` }}>
+            <img src={posts[0]} alt="" className="h-full w-full rounded-full object-cover" style={{ border: `2px solid ${C.white}` }} />
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-[15px] font-bold">{INSTAGRAM_HANDLE.replace("@", "")}</span>
+            <span className="block text-[12px]" style={{ color: C.textSub }}>See more of our work on Instagram</span>
+          </span>
+        </a>
+        <a {...linkProps} aria-label={`Follow ${INSTAGRAM_HANDLE} on Instagram`} className="inline-flex flex-shrink-0 items-center gap-2 rounded-full p-3 text-[13px] font-bold no-underline transition-opacity hover:opacity-85 sm:px-5 sm:py-2.5" style={{ backgroundColor: C.text, color: C.white }}>
+          <InstagramGlyph size={16} /> <span className="hidden sm:inline">Follow</span>
+        </a>
+      </div>
+      <div className="grid grid-cols-3 gap-1.5 md:gap-2">
+        {posts.map((src, i) => (
+          <a key={src + i} {...linkProps} aria-label={`Open ${INSTAGRAM_HANDLE} on Instagram`} className="group relative block aspect-square overflow-hidden rounded-lg">
+            <img src={src} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ backgroundColor: "rgba(30,27,36,0.35)" }}>
+              <InstagramGlyph size={28} color={C.white} />
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Card({ children, className = "", accent = false, tint = false }: { children: React.ReactNode; className?: string; accent?: boolean; tint?: boolean }) {
   return (
     <div className={`rounded-[20px] p-6 md:p-7 ${className}`} style={{ backgroundColor: tint ? C.lavCard : C.white, border: `1px solid ${accent ? C.purple : C.border}` }}>
@@ -470,6 +517,7 @@ function StickyCTA({ onDismiss }: { onDismiss: () => void }) {
 const BRAND = "Content Collective AI";
 const INSTAGRAM_HANDLE = "@contentcollective.ai";
 const INSTAGRAM_URL = "https://www.instagram.com/contentcollective.ai";
+const IG_POSTS = [imgPortrait3, imgPortrait1, imgHero, imgPortrait7, imgPortrait14, imgPortrait12];
 const COURSE_URL = "https://website-ai-flame.vercel.app/";
 
 const WORK_ROW = [imgHero, imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait7, imgPortrait12, imgPortrait13, imgPortrait14, imgPortrait15];
@@ -679,6 +727,17 @@ export default function App() {
             </div>
           </div>
 
+          {/* Our Work: full-bleed sliding photo row inside the brands section */}
+          <div id="our-work" className="relative left-1/2 mt-16 w-screen -translate-x-1/2 scroll-mt-24">
+            <div className="mx-auto mb-9 max-w-[1150px] px-6 text-center">
+              <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
+              <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+                Every image here was created with AI — the same system we use for clients and teach in the course.
+              </p>
+            </div>
+            <PhotoMarquee images={WORK_ROW} onImageClick={setLightbox} />
+          </div>
+
           {/* Process timeline */}
           <div className="relative mt-16 overflow-hidden rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
             <BlobField className="opacity-40" />
@@ -724,26 +783,6 @@ export default function App() {
           </div>
 
           <PillButton href={COURSE_URL} variant="purple" className="mt-10">View the Full Course</PillButton>
-        </div>
-        </Reveal>
-      </section>
-
-      {/* ═══ OUR WORK — grid gallery, description below ═══ */}
-      <section id="our-work" className="relative overflow-hidden" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
-        <BlobField className="opacity-30" />
-        <EdgeFade position="top" />
-        <EdgeFade position="bottom" />
-        <Reveal>
-        <div className="relative py-16">
-          <div className="mx-auto mb-9 max-w-[1150px] px-6 text-center">
-            <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
-            <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
-              Every image here was created with AI — the same system we use for clients and teach in the course.
-            </p>
-          </div>
-
-          {/* Sliding photo row, full width */}
-          <PhotoMarquee images={WORK_ROW} onImageClick={setLightbox} />
         </div>
         </Reveal>
       </section>
@@ -816,10 +855,7 @@ export default function App() {
       {/* ═══ INSTAGRAM ═══ */}
       <section className="px-6 pb-16">
         <Reveal>
-        <div className="mx-auto max-w-[700px] rounded-3xl px-8 py-9 text-center md:px-12" style={{ backgroundColor: C.lavStrong, border: `1px solid ${C.purple}55` }}>
-          <p className="mb-5 text-[15px] font-semibold leading-relaxed">See more of our work on Instagram.</p>
-          <PillButton href={INSTAGRAM_URL} variant="dark">{INSTAGRAM_HANDLE}</PillButton>
-        </div>
+        <InstagramFeed posts={IG_POSTS} />
         </Reveal>
       </section>
 
