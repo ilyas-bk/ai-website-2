@@ -679,6 +679,17 @@ export default function App() {
             </div>
           </div>
 
+          {/* Our Work: full-bleed sliding photo row inside the brands section */}
+          <div id="our-work" className="relative left-1/2 mt-16 w-screen -translate-x-1/2 scroll-mt-24">
+            <div className="mx-auto mb-9 max-w-[1150px] px-6 text-center">
+              <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
+              <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+                Every image here was created with AI — the same system we use for clients and teach in the course.
+              </p>
+            </div>
+            <PhotoMarquee images={WORK_ROW} onImageClick={setLightbox} />
+          </div>
+
           {/* Process timeline */}
           <div className="relative mt-16 overflow-hidden rounded-3xl p-8 md:p-10" style={{ backgroundColor: "rgba(255,255,255,0.55)", border: `1px solid ${C.border}`, backdropFilter: "blur(10px)" }}>
             <BlobField className="opacity-40" />
@@ -724,26 +735,6 @@ export default function App() {
           </div>
 
           <PillButton href={COURSE_URL} variant="purple" className="mt-10">View the Full Course</PillButton>
-        </div>
-        </Reveal>
-      </section>
-
-      {/* ═══ OUR WORK — grid gallery, description below ═══ */}
-      <section id="our-work" className="relative overflow-hidden" style={{ background: `radial-gradient(85% 65% at 50% 45%, ${C.lavender} 0%, ${C.lav2} 45%, ${C.bg} 85%)` }}>
-        <BlobField className="opacity-30" />
-        <EdgeFade position="top" />
-        <EdgeFade position="bottom" />
-        <Reveal>
-        <div className="relative py-16">
-          <div className="mx-auto mb-9 max-w-[1150px] px-6 text-center">
-            <h2 className="mb-2.5 text-[26px] md:text-[30px] font-extrabold tracking-[-0.01em]">Our Work</h2>
-            <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>
-              Every image here was created with AI — the same system we use for clients and teach in the course.
-            </p>
-          </div>
-
-          {/* Sliding photo row, full width */}
-          <PhotoMarquee images={WORK_ROW} onImageClick={setLightbox} />
         </div>
         </Reveal>
       </section>
